@@ -90,18 +90,63 @@ public class Principal {
     }
 
     public class ThreadCoche implements Runnable{
+        byte id = 0;
+
+        public ThreadCoche(byte id) {
+            this.id = id;
+        }
 
         @Override
         public void run() {
+
+            while (true){
+
+                System.out.println("Coche " + id + "esta libre.");
+                controll.cocheLibre.release();
+
+                try {
+                    controll.cocheUsandose.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println("El pasajero: " + controll.colaThreadPasajero.poll().id + " se ha montado en el coche: " + id);
+
+                System.out.println("El coche: " + id + " .esta en circulaciom");
+
+                controll.cochesRestantes.release();
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println("El coche: " + id + " ha regresado.");
+                controll.pasajerosRestantes.release();
+            }
 
         }
     }
 
     private void executeMultiThreading() throws InterruptedException{
+        int a = 0;
+        for(int i = 0; i < controll.iCoches; i++) {
+            new Thread(new ThreadCoche((byte) i)).start();
+        }
+        while (true){
+            new Thread(new ThreadPasajero((byte) a)).start();
+            a++;
+            Thread.sleep(500);
+
+        }
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+
+        Principal principal = new Principal();
+        principal.executeMultiThreading();
 
 
     }
