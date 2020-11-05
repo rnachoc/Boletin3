@@ -5,6 +5,7 @@ public class Principal {
 
 
 
+
     }
 
     public class ThreadPasajero implements Runnable{
