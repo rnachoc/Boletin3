@@ -49,7 +49,7 @@ public class Principal {
         }
         @Override
         public void run() {
-            byte iTiempoRandom = (byte) (1 + (byte) controll.random.nextInt(1000 * controll.bTiempoPasajeros));
+            byte iTiempoRandom = (byte) (Math.random() * 10);
 
             try {
                 Thread.sleep(iTiempoRandom);
@@ -58,7 +58,7 @@ public class Principal {
                 e.printStackTrace();
             }
             controll.setIdPasajero(id);
-            System.out.println("Pasajero " + id + "ha llegado a la atraccion en: " + iTiempoRandom / 1000 + "segundos");
+            System.out.println("Pasajero " + id + " ha llegado a la atraccion en: " + (iTiempoRandom + 1) + " segundos");
             controll.colaThreadPasajero.add(this);
 
             try {
@@ -101,7 +101,7 @@ public class Principal {
 
             while (true){
 
-                System.out.println("Coche " + id + "esta libre.");
+                System.out.println("Coche " + id + " esta libre.");
                 controll.cocheLibre.release();
 
                 try {
@@ -112,7 +112,7 @@ public class Principal {
 
                 System.out.println("El pasajero: " + controll.colaThreadPasajero.poll().id + " se ha montado en el coche: " + id);
 
-                System.out.println("El coche: " + id + " .esta en circulaciom");
+                System.out.println("El coche: " + id + " .esta en circulacion");
 
                 controll.cochesRestantes.release();
 
