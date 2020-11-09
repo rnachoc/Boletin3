@@ -12,7 +12,6 @@ public class Principal {
         public Semaphore pasajeros = new Semaphore(0);
 
         public Queue<ThreadPasajero> colaThreadPasajero = new LinkedList<ThreadPasajero>();
-
     }
 
     Controll controll = new Controll();
@@ -30,40 +29,14 @@ public class Principal {
 
             try {
                 Thread.sleep(iTiempoRandom * 1000);
+
             } catch (InterruptedException e) {
                 System.out.println("ERROR! ");
                 e.printStackTrace();
             }
-            controll.setIdPasajero(id);
-            System.out.println("Pasajero " + id + " ha llegado a la atraccion en: " + (iTiempoRandom + 1) + " segundos");
+
             controll.colaThreadPasajero.add(this);
-
-            try {
-                controll.cocheLibre.acquire();
-            } catch (InterruptedException e) {
-
-                e.printStackTrace();
-            }
-
-            controll.cocheUsandose.release();
-
-
-            try {
-                controll.cochesRestantes.acquire();
-            } catch (InterruptedException e) {
-
-                e.printStackTrace();
-            }
-
-            try {
-                controll.pasajerosRestantes.acquire();
-            } catch (InterruptedException e) {
-                System.out.println();
-                e.printStackTrace();
-            }
-            System.out.println(id+" Se ha bajado de la atraccion.");
-
-        }
+            controll.pasajeros.release();
     }
 
     public class ThreadCoche implements Runnable{
@@ -79,16 +52,16 @@ public class Principal {
             while (true){
 
                 System.out.println("Coche " + id + " esta libre.");
-                controll.cocheLibre.release();
-
                 try {
-                    controll.cocheUsandose.acquire();
+                    controll.coches.acquire();
+                    controll.pasajeros.acquire();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                System.out.println("El pasajero: " + controll.colaThreadPasajero.poll().id + " se ha montado en el coche: " + id);
+                int iPasajeroAcabado = controll.colaThreadPasajero.poll().id;
 
+                System.out.println("El pasajero: " + iPasajeroAcabado + " se ha montado en el coche: " + id);
                 System.out.println("El coche: " + id + " .esta en circulacion");
 
                 controll.cochesRestantes.release();
