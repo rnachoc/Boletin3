@@ -8,35 +8,11 @@ public class Principal {
     public class Controll{
 
         public int iCoches = 3;
-        public byte bTiempoPasajeros = 5;
-        public byte getbTiempoAtraccion = 2;
-        public Semaphore cocheLibre = new Semaphore(0);
-        public Semaphore cocheUsandose = new Semaphore(0);
-        public Semaphore cochesRestantes = new Semaphore(0);
-        public Semaphore pasajerosRestantes = new Semaphore(0);
-
-        public Random random = new Random();
+        public Semaphore coches = new Semaphore(iCoches);
+        public Semaphore pasajeros = new Semaphore(0);
 
         public Queue<ThreadPasajero> colaThreadPasajero = new LinkedList<ThreadPasajero>();
 
-        public volatile byte idCoche = 0;
-        public volatile byte idPasajero = 0;
-
-        public byte getIdCoche() {
-            return idCoche;
-        }
-
-        public void setIdCoche(byte idCoche) {
-            this.idCoche = idCoche;
-        }
-
-        public byte getIdPasajero() {
-            return idPasajero;
-        }
-
-        public void setIdPasajero(byte idPasajero) {
-            this.idPasajero = idPasajero;
-        }
     }
 
     Controll controll = new Controll();
@@ -50,9 +26,10 @@ public class Principal {
         @Override
         public void run() {
             byte iTiempoRandom = (byte) (Math.random() * 10);
+            System.out.println("El pasajero: " + id + " llega a la cola en " + iTiempoRandom + " segundos.");
 
             try {
-                Thread.sleep(iTiempoRandom);
+                Thread.sleep(iTiempoRandom * 1000);
             } catch (InterruptedException e) {
                 System.out.println("ERROR! ");
                 e.printStackTrace();
