@@ -4,107 +4,135 @@ import java.util.concurrent.Semaphore;
 
 public class Principal {
 
-    private final int IDENTISTA = 1;
+    private final int ISILLAS = 11;
+    private byte bPersonas = 0;
 
     public class Controll {
-        private Semaphore dentista = new Semaphore(IDENTISTA);
-        private Semaphore silla = new Semaphore(0);
+        private Semaphore dentista = new Semaphore(0);
+        private Semaphore silla = new Semaphore(ISILLAS);
+        private Semaphore persona = new Semaphore(0);
 
-        private Queue<ThreadSilla> colaThreadSilla = new LinkedList<ThreadSilla>();
+        private Queue<ThreadPersona> colaThreadPersona = new LinkedList<ThreadPersona>();
 
         public Semaphore getDentista() {
             return dentista;
         }
+
         public void setDentista(Semaphore dentista) {
             this.dentista = dentista;
         }
+
         public Semaphore getSilla() {
             return silla;
         }
+
         public void setSilla(Semaphore silla) {
             this.silla = silla;
         }
-        public Queue<ThreadSilla> getColaThreadComensal() {
-            return colaThreadSilla;
+
+        public Semaphore getPersona() {
+            return persona;
         }
-        public void setColaThreadSilla(Queue<ThreadSilla> colaThreadSilla) {
-            this.colaThreadSilla = colaThreadSilla;
+
+        public void setPersona(Semaphore persona) {
+            this.persona = persona;
+        }
+
+        public Queue<ThreadPersona> getColaThreadPersona() {
+            return colaThreadPersona;
+        }
+
+        public void setColaThreadPersona(Queue<ThreadPersona> colaThreadPersona) {
+            this.colaThreadPersona = colaThreadPersona;
         }
     }
 
     Controll controll = new Controll();
 
-    public class ThreadSilla implements Runnable {
+    public class ThreadPersona implements Runnable {
         private byte id = 0;
 
-        public ThreadSilla(byte id) {
+        public ThreadPersona(byte id) {
             this.id = id;
         }
 
         @Override
         public void run() {
-            System.out.println("El dentista ha llamado al paciente en la silla: " + id);
+            System.out.println("La persona:  " + id + "entra a la sala de espera de la consulta.");
 
-            controll.colaThreadSilla.add(this);
-            controll.dentista.release();
+            if(controll.colaThreadPersona.size()>= ISILLAS){
+                System.out.println("NO HAY SILLAS DISPONIBLES. \nLa persona " + id + " se marcho.");
+            }else{
+                try {
+                    controll.silla.acquire();
+                    System.out.println("La persona: " + id + " se sienta en la sala de espera.");
+                    controll.dentista.release();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                controll.colaThreadPersona.add(this);
+                controll.persona.release();
+            }
         }
     }
 
     public class ThreadDentista implements Runnable {
-        private byte id = 0;
-
-        public ThreadDentista(byte id) {
-            this.id = id;
-        }
 
         @Override
         public void run() {
 
+            System.out.println("El dentista esta disponible.");
+
             while (true) {
+                if(controll.colaThreadPersona.size() == 0){
+                    try {
+                        controll.dentista.acquire();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    int bPersonaLiberada = controll.colaThreadPersona.poll().id;
+                    Thread.interrupted();
+                    System.out.println("La persona: " + bPersonaLiberada + " ha llamado al dentista.");
+                    controll.silla.release();
+                    try {
+                        controll.silla.acquire();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("La persona: " + bPersonaLiberada + "esta siendo atendido.");
+                    System.out.println("La persona deja su silla");
 
-                System.out.println("Dentista " + id + " esta disponible.");
-                try {
-                    controll.dentista.acquire();
-                    controll.silla.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    byte bDormir = (byte) (Math.random() * 10);
+                    try {
+                        Thread.sleep(bDormir * 1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("La persona: " + bPersonaLiberada + " se ha ido. \n El dentista está libre.");
                 }
-
-                int iSillaOcupada = controll.colaThreadSilla.poll().id;
-
-                System.out.println("La silla: " + iSillaOcupada + " esta ocupada ");
-                System.out.println("El dentista: " + id + " esta ocupado");
-
-                try {
-                    // TIEMPO DE EJECUCION
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println("El dentista: " + id + " ha quedado libre.");
-
-                controll.dentista.release();
             }
         }
     }
-    private void executeMultiThreading() throws InterruptedException {
-        for (int i = 0; i < IDENTISTA; i++) {
-            new Thread(new ThreadDentista((byte) i)).start();
-        }
+    private void executeMultiThreading() {
+
+        new Thread(new ThreadDentista()).start();
+
         while (true) {
-            int a = (int) (Math.random()*15);
-            Thread.sleep(500);
-            new Thread(new ThreadSilla((byte) a)).start();
+            try {
+                Thread.sleep(500);
+                new Thread(new ThreadPersona(bPersonas)).start();
+                bPersonas++;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
+
     public static void main(String[] args) {
 
         Principal principal = new Principal();
-        try {
+
             principal.executeMultiThreading();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
+
+}}
