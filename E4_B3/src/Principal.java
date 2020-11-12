@@ -43,17 +43,17 @@ public class Principal {
 
         @Override
         public void run() {
-            System.out.println("El ascensor se ha llamado a la planta: " + id);
+            System.out.println("El dentista ha llamado al paciente en la silla: " + id);
 
             controll.colaThreadSilla.add(this);
-            controll.planta.release();
+            controll.dentista.release();
         }
     }
 
-    public class ThreadAscensor implements Runnable {
+    public class ThreadDentista implements Runnable {
         private byte id = 0;
 
-        public ThreadAscensor(byte id) {
+        public ThreadDentista(byte id) {
             this.id = id;
         }
 
@@ -62,18 +62,18 @@ public class Principal {
 
             while (true) {
 
-                System.out.println("Ascensor " + id + " esta disponible.");
+                System.out.println("Dentista " + id + " esta disponible.");
                 try {
-                    controll.ascensor.acquire();
-                    controll.planta.acquire();
+                    controll.dentista.acquire();
+                    controll.silla.acquire();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                int iPlantaOcupada = controll.colaThreadSilla.poll().id;
+                int iSillaOcupada = controll.colaThreadSilla.poll().id;
 
-                System.out.println("La planta: " + iPlantaOcupada + " ha cogido el ascensor: " + id);
-                System.out.println("El ascensor: " + id + " esta ocupado");
+                System.out.println("La silla: " + iSillaOcupada + " esta ocupada ");
+                System.out.println("El dentista: " + id + " esta ocupado");
 
                 try {
                     // TIEMPO DE EJECUCION
@@ -82,20 +82,20 @@ public class Principal {
                     e.printStackTrace();
                 }
 
-                System.out.println("El ascensor: " + id + " ha quedado libre.");
+                System.out.println("El dentista: " + id + " ha quedado libre.");
 
-                controll.ascensor.release();
+                controll.dentista.release();
             }
         }
     }
     private void executeMultiThreading() throws InterruptedException {
-        for (int i = 0; i < IASCENSORES; i++) {
-            new Thread(new ThreadAscensor((byte) i)).start();
+        for (int i = 0; i < IDENTISTA; i++) {
+            new Thread(new ThreadDentista((byte) i)).start();
         }
         while (true) {
             int a = (int) (Math.random()*15);
             Thread.sleep(500);
-            new Thread(new ThreadPlanta((byte) a)).start();
+            new Thread(new ThreadSilla((byte) a)).start();
         }
     }
     public static void main(String[] args) {
