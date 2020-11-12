@@ -84,11 +84,10 @@ public class Principal {
 
                 System.out.println("El ascensor: " + id + " ha quedado libre.");
 
-                controll.planta.release();
+                controll.ascensor.release();
             }
         }
     }
-
     private void executeMultiThreading() throws InterruptedException {
         for (int i = 0; i < IASCENSORES; i++) {
             new Thread(new ThreadAscensor((byte) i)).start();
@@ -99,7 +98,6 @@ public class Principal {
             new Thread(new ThreadPlanta((byte) a)).start();
         }
     }
-
     public static void main(String[] args) {
 
         Principal principal = new Principal();
