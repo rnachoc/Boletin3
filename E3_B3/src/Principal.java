@@ -3,7 +3,6 @@ import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 public class Principal {
-    public static void main(String[] args) {
         public class Controll {
 
             public int iPlatos = 5;
@@ -102,5 +101,4 @@ public class Principal {
                 e.printStackTrace();
             }
         }
-    }
 }
