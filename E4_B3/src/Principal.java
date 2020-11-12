@@ -17,31 +17,24 @@ public class Principal {
         public Semaphore getDentista() {
             return dentista;
         }
-
         public void setDentista(Semaphore dentista) {
             this.dentista = dentista;
         }
-
         public Semaphore getSilla() {
             return silla;
         }
-
         public void setSilla(Semaphore silla) {
             this.silla = silla;
         }
-
         public Semaphore getPersona() {
             return persona;
         }
-
         public void setPersona(Semaphore persona) {
             this.persona = persona;
         }
-
         public Queue<ThreadPersona> getColaThreadPersona() {
             return colaThreadPersona;
         }
-
         public void setColaThreadPersona(Queue<ThreadPersona> colaThreadPersona) {
             this.colaThreadPersona = colaThreadPersona;
         }
@@ -77,7 +70,6 @@ public class Principal {
     }
 
     public class ThreadDentista implements Runnable {
-
         @Override
         public void run() {
 
@@ -120,7 +112,7 @@ public class Principal {
 
         while (true) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(3000);
                 new Thread(new ThreadPersona(bPersonas)).start();
                 bPersonas++;
             } catch (InterruptedException e) {
@@ -134,5 +126,4 @@ public class Principal {
         Principal principal = new Principal();
 
             principal.executeMultiThreading();
-
 }}
