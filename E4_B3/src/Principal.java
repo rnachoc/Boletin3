@@ -4,40 +4,40 @@ import java.util.concurrent.Semaphore;
 
 public class Principal {
 
-    private final int IASCENSORES = 5;
+    private final int IDENTISTA = 1;
 
     public class Controll {
-        private Semaphore ascensor = new Semaphore(IASCENSORES);
-        private Semaphore planta = new Semaphore(0);
+        private Semaphore dentista = new Semaphore(IDENTISTA);
+        private Semaphore silla = new Semaphore(0);
 
-        private Queue<ThreadPlanta> colaThreadPlanta = new LinkedList<ThreadPlanta>();
+        private Queue<ThreadSilla> colaThreadSilla = new LinkedList<ThreadSilla>();
 
-        public Semaphore getAscensor() {
-            return ascensor;
+        public Semaphore getDentista() {
+            return dentista;
         }
-        public void setAscensor(Semaphore ascensor) {
-            this.ascensor = ascensor;
+        public void setDentista(Semaphore dentista) {
+            this.dentista = dentista;
         }
-        public Semaphore getPlanta() {
-            return planta;
+        public Semaphore getSilla() {
+            return silla;
         }
-        public void setPlanta(Semaphore planta) {
-            this.planta = planta;
+        public void setSilla(Semaphore silla) {
+            this.silla = silla;
         }
-        public Queue<ThreadPlanta> getColaThreadComensal() {
-            return colaThreadPlanta;
+        public Queue<ThreadSilla> getColaThreadComensal() {
+            return colaThreadSilla;
         }
-        public void setColaThreadComensal(Queue<ThreadPlanta> colaThreadPlanta) {
-            this.colaThreadPlanta = colaThreadPlanta;
+        public void setColaThreadSilla(Queue<ThreadSilla> colaThreadSilla) {
+            this.colaThreadSilla = colaThreadSilla;
         }
     }
 
     Controll controll = new Controll();
 
-    public class ThreadPlanta implements Runnable {
+    public class ThreadSilla implements Runnable {
         private byte id = 0;
 
-        public ThreadPlanta(byte id) {
+        public ThreadSilla(byte id) {
             this.id = id;
         }
 
@@ -45,7 +45,7 @@ public class Principal {
         public void run() {
             System.out.println("El ascensor se ha llamado a la planta: " + id);
 
-            controll.colaThreadPlanta.add(this);
+            controll.colaThreadSilla.add(this);
             controll.planta.release();
         }
     }
@@ -70,7 +70,7 @@ public class Principal {
                     e.printStackTrace();
                 }
 
-                int iPlantaOcupada = controll.colaThreadPlanta.poll().id;
+                int iPlantaOcupada = controll.colaThreadSilla.poll().id;
 
                 System.out.println("La planta: " + iPlantaOcupada + " ha cogido el ascensor: " + id);
                 System.out.println("El ascensor: " + id + " esta ocupado");
