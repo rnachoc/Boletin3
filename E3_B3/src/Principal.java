@@ -3,10 +3,10 @@ import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 public class Principal {
-    private int n;
-    private int k;
-    private int x = 1;
-    private int i = 1;
+    private double n;
+    private double k;
+    private double x = 1;
+    private double i = 1;
 
     public class Controll {
         private Semaphore P1 = new Semaphore(IASCENSORES);
