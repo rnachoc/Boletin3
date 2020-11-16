@@ -14,7 +14,7 @@ public class Principal {
         private double x;
         private double i;
 
-        private Semaphore S1 = new Semaphore();
+        private Semaphore S1 = new Semaphore(0);
 
         private Queue<P1> colaP1 = new LinkedList<P1>();
 
@@ -89,7 +89,7 @@ public class Principal {
             try {
                 controll.S1.acquire();
                 controll.setI(controll.calculoFactorial(controll.getK()) * controll.calculoFactorial(controll.getN() - controll.getK()));
-                Double dCalculo = (controll.getX() / controll.getI());
+                Double dCalculo = controll.x / controll.i;
                 System.out.println("Resultado: " + dCalculo);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -101,24 +101,17 @@ public class Principal {
         Double N;
 
         do {
-            N = (Double) ValidaLibrary.valida("Introduzca un numero: ", 0, -1, 2);
-            K = (Double) ValidaLibrary.valida("Introduzca un numero: ", 0, N, 2);
+            N = (Double) ValidaLibrary.valida("Introduzca un numero 1: ", 0, 10, 2);
+            K = (Double) ValidaLibrary.valida("Introduzca un numero 2: ", 0, N, 2);
 
         }while (N < K);
-
         controll.setN(N);
-
+        controll.setK(K);
 
         new Thread(new P1()).start();
-
-
-
-
         new Thread(new P2()).start();
-        new Thread(new P2()).join();
     }
     public static void main(String[] args) {
-
         Principal principal = new Principal();
         try {
             principal.executeMultiThreading();
@@ -126,7 +119,5 @@ public class Principal {
             e.printStackTrace();
         }
     }
-
-
 
 }
