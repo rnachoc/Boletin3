@@ -3,94 +3,103 @@ import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 public class Principal {
-    private double n;
-    private double k;
-    private double x = 1;
-    private double i = 1;
+
 
     public class Controll {
-        private Semaphore P1 = new Semaphore(IASCENSORES);
-        private Semaphore P2 = new Semaphore(x);
 
-        private Queue<ThreadPlanta> colaThreadPlanta = new LinkedList<ThreadPlanta>();
+        private double n;
+        private double k;
+        private double x;
+        private double i;
 
-        public Semaphore getAscensor() {
-            return ascensor;
+        private Semaphore S1 = new Semaphore();
+
+        private Queue<P1> colaP1 = new LinkedList<P1>();
+
+
+        public double getN() {
+            return n;
         }
-        public void setAscensor(Semaphore ascensor) {
-            this.ascensor = ascensor;
+
+        public void setN(double n) {
+            this.n = n;
         }
-        public Semaphore getPlanta() {
-            return planta;
+
+        public double getK() {
+            return k;
         }
-        public void setPlanta(Semaphore planta) {
-            this.planta = planta;
+
+        public void setK(double k) {
+            this.k = k;
         }
-        public Queue<ThreadPlanta> getColaThreadComensal() {
-            return colaThreadPlanta;
+
+        public double getX() {
+            return x;
         }
-        public void setColaThreadComensal(Queue<ThreadPlanta> colaThreadPlanta) {
-            this.colaThreadPlanta = colaThreadPlanta;
+
+        public void setX(double x) {
+            this.x = x;
         }
-    }
+
+        public double getI() {
+            return i;
+        }
+
+        public void setI(double i) {
+            this.i = i;
+        }
+
+        public Double calculoFactorial(Double dNum){
+            if(dNum == 0 || dNum == 1){
+                return 1d;
+            }else{
+
+                return dNum * calculoFactorial(dNum -1);
+            }
+        }
+        }
 
     Controll controll = new Controll();
 
-    public class ThreadPlanta implements Runnable {
-        private byte id = 0;
-
-        public ThreadPlanta(byte id) {
-            this.id = id;
-        }
+    public class P1 implements Runnable {
 
         @Override
         public void run() {
-            System.out.println("El ascensor se ha llamado a la planta: " + id);
 
-            controll.colaThreadPlanta.add(this);
-            controll.planta.release();
+            controll.setX(controll.calculoFactorial(controll.getN()));
+            controll.S1.release();
         }
     }
 
-    public class ThreadAscensor implements Runnable {
-        private byte id = 0;
+    public class P2 implements Runnable {
+        private Double dk;
 
-        public ThreadAscensor(byte id) {
-            this.id = id;
+        public Double getdk() {
+            return dk;
+        }
+
+        public void setdk(Double dk) {
+            this.dk = dk;
         }
 
         @Override
         public void run() {
-
-            while (true) {
-
-                System.out.println("Ascensor " + id + " esta disponible.");
-                try {
-                    controll.ascensor.acquire();
-                    controll.planta.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                int iPlantaOcupada = controll.colaThreadPlanta.poll().id;
-
-                System.out.println("La planta: " + iPlantaOcupada + " ha cogido el ascensor: " + id);
-                System.out.println("El ascensor: " + id + " esta ocupado");
-
-                try {
-                    // TIEMPO DE EJECUCION
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println("El ascensor: " + id + " ha quedado libre.");
-
-                controll.ascensor.release();
+            try {
+                controll.S1.acquire();
+                controll.setI(controll.calculoFactorial(controll.getK()) * controll.calculoFactorial(controll.getN() - controll.getK()));
+                Double dCalculo = (controll.getX() / controll.getI());
+                System.out.println("Resultado: " + dCalculo);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
     private void executeMultiThreading() throws InterruptedException {
+        Double dK;
+        Double dN;
+
+
+
         for (int i = 0; i < IASCENSORES; i++) {
             new Thread(new ThreadAscensor((byte) i)).start();
         }
@@ -109,4 +118,7 @@ public class Principal {
             e.printStackTrace();
         }
     }
+
+
+
 }
