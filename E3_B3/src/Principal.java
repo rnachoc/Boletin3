@@ -1,3 +1,5 @@
+import validaciones.ValidaLibrary;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
@@ -95,19 +97,25 @@ public class Principal {
         }
     }
     private void executeMultiThreading() throws InterruptedException {
-        Double dK;
-        Double dN;
+        Double K;
+        Double N;
+
+        do {
+            N = (Double) ValidaLibrary.valida("Introduzca un numero: ", 0, -1, 2);
+            K = (Double) ValidaLibrary.valida("Introduzca un numero: ", 0, N, 2);
+
+        }while (N < K);
+
+        controll.setN(N);
+
+
+        new Thread(new P1()).start();
 
 
 
-        for (int i = 0; i < IASCENSORES; i++) {
-            new Thread(new ThreadAscensor((byte) i)).start();
-        }
-        while (true) {
-            int a = (int) (Math.random()*15);
-            Thread.sleep(500);
-            new Thread(new ThreadPlanta((byte) a)).start();
-        }
+
+        new Thread(new P2()).start();
+        new Thread(new P2()).join();
     }
     public static void main(String[] args) {
 
