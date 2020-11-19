@@ -3,6 +3,11 @@ import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 public class Principal {
+
+    private final byte MAX_ESTUDIANTES = 10;
+    private final int BAJAR = 0;
+    private final int SUBIR = 1;
+
     public class Controll {
 
         public Semaphore semaphore = new Semaphore(1);
@@ -54,32 +59,34 @@ public class Principal {
 
         @Override
         public void run() {
-            byte iTiempoRandom = (byte) (Math.random() * 10);
-            System.out.println("El comensal: " + id + " llega a la cola en " + iTiempoRandom + " segundos.");
+            controll.semaphore.acquire();
 
-            try {
-                Thread.sleep(iTiempoRandom * 1000);
 
-            } catch (InterruptedException e) {
-                System.out.println("ERROR! ");
-                e.printStackTrace();
-            }
 
-            controll.colaSubir.add(this);
-            controll.semaphore.release();
         }
     }
 
     private void executeMultiThreading() throws InterruptedException {
         int a = 0;
-        for (int i = 0; i < controll.iPlatos; i++) {
-            new Thread(new ThreadPlatos((byte) i)).start();
-        }
+
+        int iNumero = (int) (Math.random() * 2);
+
         while (true) {
-            Thread.sleep(500);
-            new Thread(new ThreadComensales((byte) a)).start();
+            Thread.sleep(550);
+            new Thread(new Alumno((byte) iNumero)).start();
             a++;
         }
+    }
+
+    public static void main(String[] args) {
+
+        try {
+            Principal principal = new Principal();
+            principal.executeMultiThreading();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
