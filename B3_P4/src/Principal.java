@@ -69,9 +69,12 @@ public class Principal {
         @Override
         public void run() {
             try {
-                controll.colaSubir.add(this);
+                //controll.colaSubir.add(this);
                 System.out.println("La cola para subir: " + getId() + " va a subir.");
-                controll.semaphore.acquire();
+                controll.semaphoreSubir.acquire();
+
+
+                controll.semaphoreSubir.release();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -98,10 +101,12 @@ public class Principal {
         @Override
         public void run() {
             try {
-
-                controll.colaBajar.add(this);
+                //controll.colaBajar.add(this);
                 System.out.println("La cola para bajar: " + getId() + " va a bajar.");
-                controll.semaphore.acquire();
+                controll.semaphoreBajar.acquire();
+
+
+                controll.semaphoreBajar.release();
 
 
 
