@@ -26,6 +26,11 @@ public class Principal {
 
     private final Controll controll = new Controll();
 
+    public class Aurelio{
+
+
+
+    }
 
 
 
@@ -40,4 +45,33 @@ public class Principal {
 
 
 
+
+
+
+
+
+
+    private void executeMultiThreading() throws InterruptedException {
+
+        while (true) {
+            int iCont = 0;
+            Thread.sleep(200);
+            new Thread(new AlumnoSubir((byte) iCont)).start();
+            iCont++;
+            Thread.sleep(200);
+            new Thread(new AlumnoBajar((byte) iCont)).start();
+            iCont ++;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        try {
+            Principal principal = new Principal();
+            principal.executeMultiThreading();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
