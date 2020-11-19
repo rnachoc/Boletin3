@@ -16,8 +16,45 @@ public class Principal {
         public Queue<AlumnoSubir> colaSubir = new LinkedList<AlumnoSubir>();
         public Queue<AlumnoBajar> colaBajar = new LinkedList<AlumnoBajar>();
 
+        private boolean bSubir = false;
+        private boolean bBajar = false;
+        private byte alumnosbajando = 0;
+        private byte alumnossubiendo = 0;
+
         public Semaphore getSemaphoreSubir() {
             return semaphoreSubir;
+        }
+
+        public boolean isbSubir() {
+            return bSubir;
+        }
+
+        public void setbSubir(boolean bSubir) {
+            this.bSubir = bSubir;
+        }
+
+        public boolean isbBajar() {
+            return bBajar;
+        }
+
+        public void setbBajar(boolean bBajar) {
+            this.bBajar = bBajar;
+        }
+
+        public byte getAlumnosbajando() {
+            return alumnosbajando;
+        }
+
+        public void setAlumnosbajando(byte alumnosbajando) {
+            this.alumnosbajando = alumnosbajando;
+        }
+
+        public byte getAlumnossubiendo() {
+            return alumnossubiendo;
+        }
+
+        public void setAlumnossubiendo(byte alumnossubiendo) {
+            this.alumnossubiendo = alumnossubiendo;
         }
 
         public void setSemaphoreSubir(Semaphore semaphoreSubir) {
@@ -69,19 +106,28 @@ public class Principal {
         @Override
         public void run() {
             try {
-                //controll.colaSubir.add(this);
-
-                if(controll.semaphoreBajar.availablePermits() == MAX_ESTUDIANTES){
-                    controll.semaphoreSubir.acquire();
-                    controll.semaphoreBajar.acquire();
+                controll.semaphoreBajar.acquire();
+                controll.colaSubir.add(this);
+                controll.bSubir = true;
+                if(controll.colaBajar.isEmpty() && controll.alumnossubiendo != 10 || controll.bSubir){
+                    controll.bBajar = false;
 
                     System.out.println("La cola para subir: " + getId() + " va a subir.");
+                    controll.alumnosbajando++;
+                    Thread.sleep(2000);
+
+                    System.out.println("El alumno para subir: " + getId() + " ha subido");
+                    controll.semaphoreBajar.release();
+                }
+
+                if (controll.alumnossubiendo == 10){
+                    controll.bSubir = false;
+                    System.out.println("Han subido 10 alumnos.");
+                    for (int i = 0; i < MAX_ESTUDIANTES ; i++){
+                        controll.colaBajar.poll();
 
 
-                    controll.semaphoreSubir.release();
-                    controll.semaphoreSubir.release();
-
-                    System.out.println("La cola para subir: " + getId() + " ha subido");
+                    }
                 }
 
             } catch (InterruptedException e) {
@@ -110,19 +156,30 @@ public class Principal {
         @Override
         public void run() {
             try {
-                //controll.colaBajar.add(this);
-                if(controll.semaphoreSubir.availablePermits() == MAX_ESTUDIANTES){
-                    controll.semaphoreBajar.acquire();
-                    controll.semaphoreSubir.acquire();
+                controll.semaphoreSubir.acquire();
+                controll.colaBajar.add(this);
 
+                if(controll.colaSubir.isEmpty() && controll.alumnosbajando != MAX_ESTUDIANTES || controll.bBajar){
+                    controll.bBajar = true;
+                    controll.bSubir = false;
                     System.out.println("La cola para bajar: " + getId() + " va a bajar.");
 
-                    controll.semaphoreSubir.release();
-                    controll.semaphoreBajar.release();
+                    controll.alumnosbajando++;
+                    Thread.sleep(2000);
 
-                    System.out.println("La cola para bajar: " + getId() + " ha llegado abajo.");
+                    System.out.println("El alumno para bajar: " + getId() + " ha llegado abajo.");
+                    controll.semaphoreSubir.release();
                 }
 
+                if(controll.alumnosbajando == 10){
+                    System.out.println("Han bajado 10 alumnos.");
+                    controll.alumnosbajando = 0;
+
+                    for (int i = 0; i < MAX_ESTUDIANTES ; i++){
+                        controll.colaBajar.poll();
+                        Thread.sleep(500);
+                    }
+                }
 
 
 
@@ -138,9 +195,10 @@ public class Principal {
 
         while (true) {
             int iCont = 0;
-            Thread.sleep(550);
+            Thread.sleep(200);
             new Thread(new AlumnoSubir((byte) iCont)).start();
             iCont++;
+            Thread.sleep(200);
             new Thread(new AlumnoBajar((byte) iCont)).start();
             iCont ++;
         }
