@@ -28,13 +28,6 @@ public class Principal {
             this.sDiscord = sDiscord;
         }
 
-        public Queue<AlumnoSubir> colaSubir = new LinkedList<AlumnoSubir>();
-        public Queue<AlumnoBajar> colaBajar = new LinkedList<AlumnoBajar>();
-
-        public Semaphore getSemaphoreSubir() {
-            return semaphoreSubir;
-        }
-
 
     }
 
