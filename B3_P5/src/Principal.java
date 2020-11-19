@@ -42,13 +42,17 @@ public class Principal {
             do {
                 if (controll.sGoogleMeets.getQueueLength() > controll.sDiscord.getQueueLength()){
                     controll.sGoogleMeets.release();
+                    System.out.println("Aurelio ha atendido a un estudiante en GoogleMeets");
                 }else if (controll.sGoogleMeets.getQueueLength() == controll.sDiscord.getQueueLength()){
                     int iNumero = (int) (Math.random() * 2);
                     if (iNumero == DISCORD){
                         controll.sDiscord.release();
+                        System.out.println("Aurelio ha atendido a un estudiante en DISCORD");
                     }else controll.sGoogleMeets.release();
+                    System.out.println("Aurelio ha atendido a un estudiante en GoogleMeets");
                 }else {
                     controll.sDiscord.release();
+                    System.out.println("Aurelio ha atendido a un estudiante en DISCORD");
                 }
                 try {
                     Thread.sleep(10000);
@@ -95,30 +99,12 @@ public class Principal {
                 System.out.println("El alumno: " + getId() + " ha entrado en GoogleMeets.");
                 controll.sGoogleMeets.acquire();
             }
+                System.out.println("El alumno: " + getId() + "ya ha sido atendido.");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private void executeMultiThreading() throws InterruptedException {
         int iCont = 0;
