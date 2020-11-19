@@ -70,11 +70,20 @@ public class Principal {
         public void run() {
             try {
                 //controll.colaSubir.add(this);
-                System.out.println("La cola para subir: " + getId() + " va a subir.");
-                controll.semaphoreSubir.acquire();
+
+                if(controll.semaphoreBajar.availablePermits() == MAX_ESTUDIANTES){
+                    controll.semaphoreSubir.acquire();
+                    controll.semaphoreBajar.acquire();
+
+                    System.out.println("La cola para subir: " + getId() + " va a subir.");
 
 
-                controll.semaphoreSubir.release();
+                    controll.semaphoreSubir.release();
+                    controll.semaphoreSubir.release();
+
+                    System.out.println("La cola para subir: " + getId() + " ha subido");
+                }
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -102,11 +111,18 @@ public class Principal {
         public void run() {
             try {
                 //controll.colaBajar.add(this);
-                System.out.println("La cola para bajar: " + getId() + " va a bajar.");
-                controll.semaphoreBajar.acquire();
+                if(controll.semaphoreSubir.availablePermits() == MAX_ESTUDIANTES){
+                    controll.semaphoreBajar.acquire();
+                    controll.semaphoreSubir.acquire();
 
+                    System.out.println("La cola para bajar: " + getId() + " va a bajar.");
 
-                controll.semaphoreBajar.release();
+                    controll.semaphoreSubir.release();
+                    controll.semaphoreBajar.release();
+
+                    System.out.println("La cola para bajar: " + getId() + " ha llegado abajo.");
+                }
+
 
 
 
