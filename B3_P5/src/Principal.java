@@ -4,6 +4,9 @@ import java.util.concurrent.Semaphore;
 
 public class Principal {
 
+    private final int DISCORD = 1;
+    private final int GOOGLEMEETS = 0;
+
     public class Controll {
 
         public Semaphore sGoogleMeets = new Semaphore(0);
@@ -28,11 +31,6 @@ public class Principal {
         public Queue<AlumnoSubir> colaSubir = new LinkedList<AlumnoSubir>();
         public Queue<AlumnoBajar> colaBajar = new LinkedList<AlumnoBajar>();
 
-        private boolean bSubir = false;
-        private boolean bBajar = false;
-        private byte alumnosbajando = 0;
-        private byte alumnossubiendo = 0;
-
         public Semaphore getSemaphoreSubir() {
             return semaphoreSubir;
         }
@@ -48,11 +46,36 @@ public class Principal {
         @Override
         public void run() {
 
+            do {
+
+            }while (true);
+
         }
     }
 
     public class Alumno implements Runnable{
+        private int id;
+        private int app;
 
+        public Alumno(){
+
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getApp() {
+            return app;
+        }
+
+        public void setApp(int app) {
+            this.app = app;
+        }
 
         @Override
         public void run() {
