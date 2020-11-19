@@ -6,8 +6,24 @@ public class Principal {
 
     public class Controll {
 
-        public Semaphore semaphoreSubir = new Semaphore(MAX_ESTUDIANTES);
-        public Semaphore semaphoreBajar = new Semaphore(MAX_ESTUDIANTES);
+        public Semaphore sGoogleMeets = new Semaphore(0);
+        public Semaphore sDiscord = new Semaphore(0);
+
+        public Semaphore getsGoogleMeets() {
+            return sGoogleMeets;
+        }
+
+        public void setsGoogleMeets(Semaphore sGoogleMeets) {
+            this.sGoogleMeets = sGoogleMeets;
+        }
+
+        public Semaphore getsDiscord() {
+            return sDiscord;
+        }
+
+        public void setsDiscord(Semaphore sDiscord) {
+            this.sDiscord = sDiscord;
+        }
 
         public Queue<AlumnoSubir> colaSubir = new LinkedList<AlumnoSubir>();
         public Queue<AlumnoBajar> colaBajar = new LinkedList<AlumnoBajar>();
@@ -26,10 +42,22 @@ public class Principal {
 
     private final Controll controll = new Controll();
 
-    public class Aurelio{
+    public class Aurelio implements Runnable{
 
 
+        @Override
+        public void run() {
 
+        }
+    }
+
+    public class Alumno implements Runnable{
+
+
+        @Override
+        public void run() {
+
+        }
     }
 
 
