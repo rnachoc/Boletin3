@@ -12,8 +12,8 @@ public class Principal {
 
         public Semaphore semaphore = new Semaphore(1);
 
-        public Queue<Alumno> colaSubir = new LinkedList<Alumno>();
-        public Queue<Alumno> colaBajar = new LinkedList<Alumno>();
+        public Queue<AlumnoSubir> colaSubir = new LinkedList<AlumnoSubir>();
+        public Queue<AlumnoBajar> colaBajar = new LinkedList<AlumnoBajar>();
 
         public Semaphore getSemaphore() {
             return semaphore;
@@ -23,29 +23,29 @@ public class Principal {
             this.semaphore = semaphore;
         }
 
-        public Queue<Alumno> getColaSubir() {
+        public Queue<AlumnoSubir> getColaSubir() {
             return colaSubir;
         }
 
-        public void setColaSubir(Queue<Alumno> colaSubir) {
+        public void setColaSubir(Queue<AlumnoSubir> colaSubir) {
             this.colaSubir = colaSubir;
         }
 
-        public Queue<Alumno> getColaBajar() {
+        public Queue<AlumnoBajar> getColaBajar() {
             return colaBajar;
         }
 
-        public void setColaBajar(Queue<Alumno> colaBajar) {
+        public void setColaBajar(Queue<AlumnoBajar> colaBajar) {
             this.colaBajar = colaBajar;
         }
     }
 
     private final Controll controll = new Controll();
 
-    public class Alumno implements Runnable {
+    public class AlumnoSubir implements Runnable {
         private byte id = 0;
 
-        public Alumno(byte id) {
+        public AlumnoSubir(byte id) {
             this.id = id;
         }
 
@@ -59,22 +59,60 @@ public class Principal {
 
         @Override
         public void run() {
-            controll.semaphore.acquire();
+            try {
+                controll.colaSubir.add(this);
+                System.out.println("La cola para subir: " + getId() + " va a subir.");
+                controll.semaphore.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
+
+        }
+    }
+
+    public class AlumnoBajar implements Runnable {
+        private byte id = 0;
+
+        public AlumnoBajar(byte id) {
+            this.id = id;
+        }
+
+        public byte getId() {
+            return id;
+        }
+
+        public void setId(byte id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            try {
+
+                controll.colaBajar.add(this);
+                System.out.println("La cola para bajar: " + getId() + " va a bajar.");
+                controll.semaphore.acquire();
+
+
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
         }
     }
 
     private void executeMultiThreading() throws InterruptedException {
-        int a = 0;
-
-        int iNumero = (int) (Math.random() * 2);
 
         while (true) {
+            int iCont = 0;
             Thread.sleep(550);
-            new Thread(new Alumno((byte) iNumero)).start();
-            a++;
+            new Thread(new AlumnoSubir((byte) iCont)).start();
+            iCont++;
+            new Thread(new AlumnoBajar((byte) iCont)).start();
+            iCont ++;
         }
     }
 
