@@ -10,17 +10,26 @@ public class Principal {
 
     public class Controll {
 
-        public Semaphore semaphore = new Semaphore(1);
+        public Semaphore semaphoreSubir = new Semaphore(MAX_ESTUDIANTES);
+        public Semaphore semaphoreBajar = new Semaphore(MAX_ESTUDIANTES);
 
         public Queue<AlumnoSubir> colaSubir = new LinkedList<AlumnoSubir>();
         public Queue<AlumnoBajar> colaBajar = new LinkedList<AlumnoBajar>();
 
-        public Semaphore getSemaphore() {
-            return semaphore;
+        public Semaphore getSemaphoreSubir() {
+            return semaphoreSubir;
         }
 
-        public void setSemaphore(Semaphore semaphore) {
-            this.semaphore = semaphore;
+        public void setSemaphoreSubir(Semaphore semaphoreSubir) {
+            this.semaphoreSubir = semaphoreSubir;
+        }
+
+        public Semaphore getSemaphoreBajar() {
+            return semaphoreBajar;
+        }
+
+        public void setSemaphoreBajar(Semaphore semaphoreBajar) {
+            this.semaphoreBajar = semaphoreBajar;
         }
 
         public Queue<AlumnoSubir> getColaSubir() {
