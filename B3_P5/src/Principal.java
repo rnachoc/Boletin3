@@ -47,7 +47,21 @@ public class Principal {
         public void run() {
 
             do {
-
+                if (controll.sGoogleMeets.getQueueLength() > controll.sDiscord.getQueueLength()){
+                    controll.sGoogleMeets.release();
+                }else if (controll.sGoogleMeets.getQueueLength() == controll.sDiscord.getQueueLength()){
+                    int iNumero = (int) (Math.random() * 2);
+                    if (iNumero == DISCORD){
+                        controll.sDiscord.release();
+                    }else controll.sGoogleMeets.release();
+                }else {
+                    controll.sDiscord.release();
+                }
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }while (true);
 
         }
@@ -57,8 +71,8 @@ public class Principal {
         private int id;
         private int app;
 
-        public Alumno(){
-
+        public Alumno(int id){
+            setId(id);
         }
 
         public int getId() {
@@ -79,7 +93,18 @@ public class Principal {
 
         @Override
         public void run() {
-
+            setApp((int) (Math.random()*2));
+            try {
+            if (getApp() == DISCORD){
+                System.out.println("El alumno: " + getId() + " ha entrado en Discord.");
+                    controll.sDiscord.acquire();
+            }else{
+                System.out.println("El alumno: " + getId() + " ha entrado en GoogleMeets.");
+                controll.sGoogleMeets.acquire();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         }
     }
 
