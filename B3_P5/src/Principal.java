@@ -80,15 +80,14 @@ public class Principal {
 
 
     private void executeMultiThreading() throws InterruptedException {
-
+        int iCont = 0;
+        new Thread(new Aurelio()).start();
         while (true) {
-            int iCont = 0;
-            Thread.sleep(200);
-            new Thread(new AlumnoSubir((byte) iCont)).start();
+            Thread.sleep(2000);
+            new Thread(new Alumno(iCont)).start();
             iCont++;
-            Thread.sleep(200);
-            new Thread(new AlumnoBajar((byte) iCont)).start();
-            iCont ++;
+            new Thread(new Alumno(iCont)).start();
+            iCont++;
         }
     }
 
