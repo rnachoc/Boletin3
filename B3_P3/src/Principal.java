@@ -38,27 +38,32 @@ public class Principal {
                             sResultado = "TABACO Y CERILLA";
                             controll.Tabaco.release();
                             controll.Cerilla.release();
-                        }else if (bNum1 == controll.TABACO && bNum2 == controll.PAPEL){
+                        }
+                        if (bNum1 == controll.TABACO && bNum2 == controll.PAPEL){
 
                             sResultado = "TABACO Y PAPEL";
                             controll.Tabaco.release();
                             controll.Papel.release();
-                        }else if (bNum1 == controll.CERILLA && bNum2 == controll.PAPEL){
+                        }
+                        if (bNum1 == controll.CERILLA && bNum2 == controll.PAPEL){
 
                             sResultado = "CERILLA Y PAPEL";
                             controll.Papel.release();
                             controll.Cerilla.release();
-                        }else if (bNum1 == controll.CERILLA && bNum2 == controll.TABACO){
+                        }
+                        if (bNum1 == controll.CERILLA && bNum2 == controll.TABACO){
 
                             sResultado = "CERILLA Y TABACO";
                             controll.Tabaco.release();
                             controll.Cerilla.release();
-                        }else if (bNum1 == controll.PAPEL && bNum2 == controll.TABACO){
+                        }
+                        if (bNum1 == controll.PAPEL && bNum2 == controll.TABACO){
 
                             sResultado = "PAPEL Y TABACO";
                             controll.Papel.release();
                             controll.Tabaco.release();
-                        }else if (bNum1 ==controll.PAPEL && bNum2 == controll.CERILLA){
+                        }
+                        if (bNum1 ==controll.PAPEL && bNum2 == controll.CERILLA){
 
                             sResultado = "PAPEL Y CERILLA";
                             controll.Papel.release();
@@ -103,6 +108,7 @@ public class Principal {
                 if (iPapelAlumno == 0){
                     if (controll.Papel.availablePermits() == 0){
                         try {
+                            System.out.println("A el alumno: " + getiID() + " le faltan papeles");
                             controll.Papel.acquire();
                             iPapelAlumno ++;
                             System.out.println("El alumno: " + getiID() + " ha cogido un papelillo.");
@@ -111,10 +117,10 @@ public class Principal {
                         }
                     }
                 }
-
                 if (iCerillaAlumno == 0){
                     if (controll.Cerilla.availablePermits() == 0){
                         try {
+                            System.out.println("A el alumno: " + getiID() + " le faltan cerillas");
                             controll.Cerilla.acquire();
                             System.out.println("El alumno: " + getiID() + " ha cogido una cerilla.");
                             iCerillaAlumno ++;
@@ -123,19 +129,19 @@ public class Principal {
                         }
                     }
                 }
-
                 if (iTabacoAlumno == 0){
                     if (controll.Tabaco.availablePermits() == 0){
                         try {
-                            System.out.println("El alumno: " + getiID() + " ha cogido tabaco.");
+                            System.out.println("A el alumno: " + getiID() + " le falta tabaco.");
+
                             controll.Tabaco.acquire();
+                            System.out.println("El alumno: " + getiID() + " ha cogido tabaco.");
                             iTabacoAlumno ++;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                 }
-
                 if (iPapelAlumno > 0 && iCerillaAlumno > 0 && iTabacoAlumno > 0){
                     iPapelAlumno --;
                     iCerillaAlumno--;
@@ -143,11 +149,8 @@ public class Principal {
                     bCigarrosFumados++;
                     System.out.println("El alumno lleva : " + bCigarrosFumados + " cigarros fumados.");
                     System.out.println("EL PUMA.");
-
                 }
-
             }while (bCigarrosFumados < 10);
-
         }
     }
 
@@ -172,21 +175,5 @@ public class Principal {
         Principal principal = new Principal();
 
         principal.executeMultiThreading();
-    }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 }
