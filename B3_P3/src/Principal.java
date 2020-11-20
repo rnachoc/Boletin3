@@ -23,7 +23,6 @@ public class Principal {
         public synchronized void run() {
             String sResultado = "";
             do{
-
                 if (controll.Tabaco.availablePermits() == 0 && controll.Papel.availablePermits() == 0 && controll.Cerilla.availablePermits() == 0){
                     try {
                         Thread.sleep(150);
@@ -66,22 +65,61 @@ public class Principal {
                             controll.Cerilla.release();
                         }
 
-                        System.out.println("La mesa se ha rellenado con: " + sResultado);
-
-
+                        System.out.println("La mesa se ha rellenado con: " + sResultado + ".");
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-
-
-
-
-
             }while (true);
+        }
+    }
 
+    public class Alumno implements Runnable{
+        @Override
+        public void run() {
+            byte bCigarrosFumados = 0;
 
+            int iPapelAlumno = (int) (Math.random() * 7);
+            int iCerillaAlumno = (int) (Math.random() * 7);
+            int iTabacoAlumno = (int) (Math.random() * 7);
+
+            do {
+                bCigarrosFumados++;
+                if (iPapelAlumno == 0){
+                    if (controll.Papel.availablePermits() == 0){
+                        iPapelAlumno ++;
+                        try {
+                            controll.Papel.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                if (iCerillaAlumno == 0){
+                    if (controll.Cerilla.availablePermits() == 0){
+                        iCerillaAlumno ++;
+                        try {
+                            controll.Cerilla.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                if (iTabacoAlumno == 0){
+                    if (controll.Tabaco.availablePermits() == 0){
+                        iTabacoAlumno ++;
+                        try {
+                            controll.Tabaco.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }while (bCigarrosFumados < 10);
 
 
 
