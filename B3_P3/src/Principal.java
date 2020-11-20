@@ -76,6 +76,20 @@ public class Principal {
     }
 
     public class Alumno implements Runnable{
+        int iID;
+
+        public Alumno(int iID){
+            this.iID = iID;
+        }
+
+        public int getiID() {
+            return iID;
+        }
+
+        public void setiID(int iID) {
+            this.iID = iID;
+        }
+
         @Override
         public void run() {
             byte bCigarrosFumados = 0;
@@ -88,9 +102,10 @@ public class Principal {
                 bCigarrosFumados++;
                 if (iPapelAlumno == 0){
                     if (controll.Papel.availablePermits() == 0){
-                        iPapelAlumno ++;
                         try {
                             controll.Papel.acquire();
+                            iPapelAlumno ++;
+                            System.out.println("El alumno: ");
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -99,9 +114,9 @@ public class Principal {
 
                 if (iCerillaAlumno == 0){
                     if (controll.Cerilla.availablePermits() == 0){
-                        iCerillaAlumno ++;
                         try {
                             controll.Cerilla.acquire();
+                            iCerillaAlumno ++;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -110,13 +125,23 @@ public class Principal {
 
                 if (iTabacoAlumno == 0){
                     if (controll.Tabaco.availablePermits() == 0){
-                        iTabacoAlumno ++;
                         try {
                             controll.Tabaco.acquire();
+                            iTabacoAlumno ++;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
+                }
+
+                if (iPapelAlumno > 0 && iCerillaAlumno > 0 && iTabacoAlumno > 0){
+                    iPapelAlumno --;
+                    iCerillaAlumno--;
+                    iTabacoAlumno--;
+                    bCigarrosFumados++;
+                    System.out.println("El alumno lleva : " + bCigarrosFumados + " cigarros fumados.");
+                    System.out.println("EL PUMA.");
+
                 }
 
             }while (bCigarrosFumados < 10);
