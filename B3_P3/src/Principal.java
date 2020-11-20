@@ -148,7 +148,6 @@ public class Principal {
                     iTabacoAlumno--;
                     bCigarrosFumados++;
                     System.out.println("El alumno lleva : " + bCigarrosFumados + " cigarros fumados.");
-                    System.out.println("EL PUMA.");
                 }
             }while (bCigarrosFumados < 10);
         }
