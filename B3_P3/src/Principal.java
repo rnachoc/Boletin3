@@ -29,8 +29,8 @@ public class Principal {
                         byte bNum1;
                         byte bNum2;
                         do {
-                            bNum1 = (byte) (Math.random() * 3);
-                            bNum2 = (byte) (Math.random() * 3);
+                            bNum1 = (byte) (1 + Math.random() * 3);
+                            bNum2 = (byte) (1 + Math.random() * 3);
                         }while (bNum1 == bNum2);
 
                         if (bNum1 == controll.TABACO && bNum2 == controll.CERILLA){
@@ -104,7 +104,6 @@ public class Principal {
             int iTabacoAlumno = (int) (Math.random() * 7);
 
             do {
-                bCigarrosFumados++;
                 if (iPapelAlumno == 0){
                     if (controll.Papel.availablePermits() == 0){
                         try {
