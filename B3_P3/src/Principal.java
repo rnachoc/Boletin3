@@ -105,7 +105,7 @@ public class Principal {
                         try {
                             controll.Papel.acquire();
                             iPapelAlumno ++;
-                            System.out.println("El alumno: ");
+                            System.out.println("El alumno: " + getiID() + " ha cogido un papelillo.");
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -116,6 +116,7 @@ public class Principal {
                     if (controll.Cerilla.availablePermits() == 0){
                         try {
                             controll.Cerilla.acquire();
+                            System.out.println("El alumno: " + getiID() + " ha cogido una cerilla.");
                             iCerillaAlumno ++;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -126,6 +127,7 @@ public class Principal {
                 if (iTabacoAlumno == 0){
                     if (controll.Tabaco.availablePermits() == 0){
                         try {
+                            System.out.println("El alumno: " + getiID() + " ha cogido tabaco.");
                             controll.Tabaco.acquire();
                             iTabacoAlumno ++;
                         } catch (InterruptedException e) {
@@ -146,11 +148,32 @@ public class Principal {
 
             }while (bCigarrosFumados < 10);
 
-
-
-
         }
     }
+
+    private void executeMultiThreading() {
+
+        new Thread(new Malboro()).start();
+        int iCont = 0;
+
+        while (true) {
+            try {
+                Thread.sleep(3000);
+                new Thread(new Alumno(iCont)).start();
+                iCont++;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Principal principal = new Principal();
+
+        principal.executeMultiThreading();
+    }}
+
 
 
 
