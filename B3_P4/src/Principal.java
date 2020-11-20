@@ -9,8 +9,8 @@ public class Principal {
 
     public class Controll {
 
-        public Semaphore semaphoreSubir = new Semaphore(MAX_ESTUDIANTES);
-        public Semaphore semaphoreBajar = new Semaphore(MAX_ESTUDIANTES);
+        public Semaphore semaphoreSubir = new Semaphore(0);
+        public Semaphore semaphoreBajar = new Semaphore(0);
 
         public Queue<Alumno> colaSubir = new LinkedList<Alumno>();
         public Queue<Alumno> colaBajar = new LinkedList<Alumno>();
@@ -54,12 +54,10 @@ public class Principal {
         @Override
         public void run() {
            do {
-
                try {
                    Thread.sleep(400);
 
                    if(controll.semaphoreSubir.getQueueLength() != 0 && controll.semaphoreBajar.getQueueLength() != 0){
-
                        if(controll.semaphoreBajar.getQueueLength() >= MAX_ESTUDIANTES || controll.semaphoreSubir.getQueueLength() == 0){
                             byte bColaBajada = (byte) controll.semaphoreBajar.getQueueLength();
                             if(controll.semaphoreBajar.getQueueLength() > MAX_ESTUDIANTES){
@@ -115,8 +113,7 @@ public class Principal {
             if(bByte == SUBIR){
                 System.out.println("El alumno: " + getId() + " va a subir.");
                 controll.colaSubir.add(this);
-
-                    controll.semaphoreSubir.acquire();
+                controll.semaphoreSubir.acquire();
 
             }else{
                 System.out.println("El alumno: " + getId() + " va a bajar.");
