@@ -5,7 +5,6 @@ import java.util.concurrent.Semaphore;
 public class Principal {
 
     private final byte MAX_ESTUDIANTES = 10;
-    private final int BAJAR = 0;
     private final int SUBIR = 1;
 
     public class Controll {
@@ -13,8 +12,8 @@ public class Principal {
         public Semaphore semaphoreSubir = new Semaphore(MAX_ESTUDIANTES);
         public Semaphore semaphoreBajar = new Semaphore(MAX_ESTUDIANTES);
 
-        public Queue<AlumnoSubir> colaSubir = new LinkedList<AlumnoSubir>();
-        public Queue<AlumnoBajar> colaBajar = new LinkedList<AlumnoBajar>();
+        public Queue<Alumno> colaSubir = new LinkedList<Alumno>();
+        public Queue<Alumno> colaBajar = new LinkedList<Alumno>();
 
         private boolean bSubir = false;
         private boolean bBajar = false;
@@ -23,6 +22,34 @@ public class Principal {
 
         public Semaphore getSemaphoreSubir() {
             return semaphoreSubir;
+        }
+
+        public void setSemaphoreSubir(Semaphore semaphoreSubir) {
+            this.semaphoreSubir = semaphoreSubir;
+        }
+
+        public Semaphore getSemaphoreBajar() {
+            return semaphoreBajar;
+        }
+
+        public void setSemaphoreBajar(Semaphore semaphoreBajar) {
+            this.semaphoreBajar = semaphoreBajar;
+        }
+
+        public Queue<Alumno> getColaSubir() {
+            return colaSubir;
+        }
+
+        public void setColaSubir(Queue<Alumno> colaSubir) {
+            this.colaSubir = colaSubir;
+        }
+
+        public Queue<Alumno> getColaBajar() {
+            return colaBajar;
+        }
+
+        public void setColaBajar(Queue<Alumno> colaBajar) {
+            this.colaBajar = colaBajar;
         }
 
         public boolean isbSubir() {
@@ -56,42 +83,14 @@ public class Principal {
         public void setAlumnossubiendo(byte alumnossubiendo) {
             this.alumnossubiendo = alumnossubiendo;
         }
-
-        public void setSemaphoreSubir(Semaphore semaphoreSubir) {
-            this.semaphoreSubir = semaphoreSubir;
-        }
-
-        public Semaphore getSemaphoreBajar() {
-            return semaphoreBajar;
-        }
-
-        public void setSemaphoreBajar(Semaphore semaphoreBajar) {
-            this.semaphoreBajar = semaphoreBajar;
-        }
-
-        public Queue<AlumnoSubir> getColaSubir() {
-            return colaSubir;
-        }
-
-        public void setColaSubir(Queue<AlumnoSubir> colaSubir) {
-            this.colaSubir = colaSubir;
-        }
-
-        public Queue<AlumnoBajar> getColaBajar() {
-            return colaBajar;
-        }
-
-        public void setColaBajar(Queue<AlumnoBajar> colaBajar) {
-            this.colaBajar = colaBajar;
-        }
     }
 
     private final Controll controll = new Controll();
 
-    public class AlumnoSubir implements Runnable {
+    public class Escalera implements Runnable {
         private byte id = 0;
 
-        public AlumnoSubir(byte id) {
+        public Esalera(byte id) {
             this.id = id;
         }
 
@@ -138,10 +137,11 @@ public class Principal {
         }
     }
 
-    public class AlumnoBajar implements Runnable {
-        private byte id = 0;
+    public class Alumno implements Runnable {
+        private byte id;
+        byte bByte;
 
-        public AlumnoBajar(byte id) {
+        public Alumno(byte id) {
             this.id = id;
         }
 
@@ -153,39 +153,45 @@ public class Principal {
             this.id = id;
         }
 
+        public byte getbByte() {
+            return bByte;
+        }
+
+        public void setbByte(byte bByte) {
+            this.bByte = bByte;
+        }
+
+        public InterruptedException getE() {
+            return e;
+        }
+
+        public void setE(InterruptedException e) {
+            this.e = e;
+        }
+
         @Override
         public void run() {
-            try {
-                controll.semaphoreSubir.acquire();
-                controll.colaBajar.add(this);
 
-                if(controll.colaSubir.isEmpty() && controll.alumnosbajando != MAX_ESTUDIANTES || controll.bBajar){
-                    controll.bBajar = true;
-                    controll.bSubir = false;
-                    System.out.println("La cola para bajar: " + getId() + " va a bajar.");
+            setbByte((byte) (Math.random() * 2));
 
-                    controll.alumnosbajando++;
-                    Thread.sleep(2000);
-
-                    System.out.println("El alumno para bajar: " + getId() + " ha llegado abajo.");
-                    controll.semaphoreSubir.release();
+            if(bByte == SUBIR){
+                System.out.println("El alumno: " + getId() + " va a subir.");
+                controll.colaSubir.add(this);
+                try {
+                    controll.semaphoreSubir.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                if(controll.alumnosbajando == 10){
-                    System.out.println("Han bajado 10 alumnos.");
-                    controll.alumnosbajando = 0;
-
-                    for (int i = 0; i < MAX_ESTUDIANTES ; i++){
-                        controll.colaBajar.poll();
-                        Thread.sleep(500);
-                    }
-                }
-
-
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            }else{
+                System.out.println("El alumno: " + getId() + " va a bajar.");
             }
+
+
+
+
+
+
+
 
 
         }
@@ -214,8 +220,4 @@ public class Principal {
         }
 
     }
-
-
-
-
 }
