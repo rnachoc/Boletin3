@@ -28,7 +28,6 @@ public class Principal {
             this.sDiscord = sDiscord;
         }
 
-
     }
 
     private final Controll controll = new Controll();
@@ -51,8 +50,8 @@ public class Principal {
                         System.out.println("Aurelio ha atendido a un estudiante en DISCORD");
                         controll.sDiscord.release();
                     }else {
-                        controll.sGoogleMeets.release();
                         System.out.println("Aurelio ha atendido a un estudiante en GoogleMeets");
+                        controll.sGoogleMeets.release();
                     }
                 }else {
                     System.out.println("Aurelio ha atendido a un estudiante en DISCORD");
